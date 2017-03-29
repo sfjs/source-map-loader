@@ -22,9 +22,18 @@ module.exports = function(input, inputMap) {
 	var resolve = this.resolve;
 	var addDependency = this.addDependency;
 	var emitWarning = this.emitWarning || function() {};
-	var match = input.match(regex1) || input.match(regex2);
+
+	var match1 = regex1.exec(input); // TODO: Take into account multi-occurences too
+	var match2 = regex2.exec(input); // TODO: Take into account multi-occurences too
+
+	var match = (match1 && match1[1]) || (match2 && match2[1]);
+
+	if (match1 != null && match2 != null) {
+		match = (match1.index > match2.index) ? match1[1] : match2[1];
+	}
+
 	if(match) {
-		var url = match[1];
+		var url = match;
 		var dataUrlMatch = regexDataUrl.exec(url);
 		var callback = this.async();
 		if(dataUrlMatch) {
