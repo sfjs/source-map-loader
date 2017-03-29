@@ -23,17 +23,17 @@ module.exports = function(input, inputMap) {
 	var addDependency = this.addDependency;
 	var emitWarning = this.emitWarning || function() {};
 
-	var match1 = regex1.exec(input); // TODO: Take into account multi-occurences too
-	var match2 = regex2.exec(input); // TODO: Take into account multi-occurences too
+	var matchP1 = input.match(regex1);
+	var matchP2 = input.match(regex2);
 
-	var match = (match1 && match1[1]) || (match2 && match2[1]);
+	var match = matchP1 || matchP2;
 
-	if (match1 != null && match2 != null) {
-		match = (match1.index > match2.index) ? match1[1] : match2[1];
+	if (matchP1 && matchP2) {
+		match = (matchP1.index > matchP2.index) ? matchP1 : matchP2;
 	}
 
 	if(match) {
-		var url = match;
+		var url = match[1];
 		var dataUrlMatch = regexDataUrl.exec(url);
 		var callback = this.async();
 		if(dataUrlMatch) {
